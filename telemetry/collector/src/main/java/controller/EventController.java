@@ -24,12 +24,12 @@ public class EventController {
     @PostMapping("/hubs")
     @ResponseStatus(HttpStatus.OK)
     public void postHubEvent(@RequestBody @Valid HubEvent hubEvent) {
-
+        hubEventService.processEvent(hubEvent);
     }
 
     @PostMapping("/sensors")
     @ResponseStatus(HttpStatus.OK)
     public void postSensorEvent(@RequestBody @Valid SensorEvent sensorEvent) {
-
+        sensorEventService.processEvent(sensorEvent);
     }
 }
