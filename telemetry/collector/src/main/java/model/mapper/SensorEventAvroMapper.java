@@ -1,10 +1,8 @@
 package model.mapper;
 
 import model.sensor.*;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
-@Component
 public class SensorEventAvroMapper {
 
     public static SensorEventAvro toAvro(SensorEvent sensorEvent) {

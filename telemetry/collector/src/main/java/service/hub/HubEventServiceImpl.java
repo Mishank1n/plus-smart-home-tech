@@ -1,9 +1,9 @@
 package service.hub;
 
-import kafka.KafkaTelemetryProducer;
+
+import kafka.KafkaProducerService;
 import lombok.AllArgsConstructor;
 import model.hub.HubEvent;
-import model.mapper.HubEventAvroMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class HubEventServiceImpl implements HubEventService {
 
     @Autowired
-    private final KafkaTelemetryProducer kafkaTelemetryProducer;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public void processEvent(HubEvent event) {
-        kafkaTelemetryProducer.sendHubEvent(HubEventAvroMapper.toAvro(event));
+        kafkaProducerService.sendHubEvent(event);
     }
 }

@@ -33,3 +33,17 @@ services:
                              --partitions 1 --replication-factor 1 --if-not-exists \
                              --bootstrap-server kafka:29092'"
     init: true
+
+
+  collector:
+    build:
+      context: . # Путь к Dockerfile, если он есть
+      dockerfile: telemetry/collector/Dockerfile # Укажите путь к Dockerfile для collector
+    container_name: collector
+    depends_on:
+      - kafka
+      - kafka-init-topics
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092

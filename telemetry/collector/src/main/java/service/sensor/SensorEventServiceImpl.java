@@ -1,8 +1,8 @@
 package service.sensor;
 
-import kafka.KafkaTelemetryProducer;
+
+import kafka.KafkaProducerService;
 import lombok.AllArgsConstructor;
-import model.mapper.SensorEventAvroMapper;
 import model.sensor.SensorEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class SensorEventServiceImpl implements SensorEventService {
 
     @Autowired
-    private final KafkaTelemetryProducer kafkaTelemetryProducer;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public void processEvent(SensorEvent event) {
-        kafkaTelemetryProducer.sendSensorEvent(SensorEventAvroMapper.toAvro(event));
+        kafkaProducerService.sendSensorEvent(event);
     }
 }

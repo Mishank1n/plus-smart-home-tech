@@ -1,10 +1,8 @@
 package model.mapper;
 
 import model.hub.*;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
-@Component
 public class HubEventAvroMapper {
 
     public static HubEventAvro toAvro(HubEvent hubEvent) {
