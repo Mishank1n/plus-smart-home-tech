@@ -12,24 +12,24 @@ import service.sensor.SensorEventService;
 
 @Slf4j
 @RestController
-@RequestMapping("/events") // <-- Изменен на /events, как ожидает тест
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
 
     private final HubEventService hubEventService;
     private final SensorEventService sensorEventService;
 
-    @PostMapping("/sensors") // Теперь будет /events/sensors
+    @PostMapping("/sensors")
     public ResponseEntity<Void> collectSensorEvent(@Valid @RequestBody SensorEvent event) {
         log.info("Received sensor event: {}", event);
         sensorEventService.processEvent(event);
-        return ResponseEntity.ok().build(); // 200 OK
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/hubs") // Теперь будет /events/hubs
+    @PostMapping("/hubs")
     public ResponseEntity<Void> collectHubEvent(@Valid @RequestBody HubEvent event) {
         log.info("Received hub event: {}", event);
         hubEventService.processEvent(event);
-        return ResponseEntity.ok().build(); // 200 OK
+        return ResponseEntity.ok().build();
     }
 }
