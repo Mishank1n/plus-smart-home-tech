@@ -1,7 +1,7 @@
 package ru.yandex.practicum.kafka.telemetry.controller;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.kafka.telemetry.model.hub.HubEvent;
 import ru.yandex.practicum.kafka.telemetry.model.sensor.SensorEvent;
@@ -13,8 +13,8 @@ import ru.yandex.practicum.kafka.telemetry.service.sensor.SensorEventService;
 @Slf4j
 @RestController
 @RequestMapping("/events")
-@AllArgsConstructor
-public class EventController {
+@RequiredArgsConstructor
+public class CollectorController {
 
     private final HubEventService hubEventService;
     private final SensorEventService sensorEventService;

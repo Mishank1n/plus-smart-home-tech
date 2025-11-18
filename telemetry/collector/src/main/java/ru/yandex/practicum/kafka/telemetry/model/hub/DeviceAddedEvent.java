@@ -14,7 +14,7 @@ public class DeviceAddedEvent extends HubEvent {
     @NotBlank
     String id;
     @NotNull
-    DeviceType type;
+    DeviceType deviceType;
 
     @Override
     public HubEventType getType() {

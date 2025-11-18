@@ -15,7 +15,7 @@ public class HubEventAvroMapper {
                 builder.setPayload(
                         DeviceAddedEventAvro.newBuilder()
                                 .setId(deviceAddedEvent.getId())
-                                .setType(DeviceTypeAvro.valueOf(deviceAddedEvent.getType().name()))
+                                .setType(DeviceTypeAvro.valueOf(deviceAddedEvent.getDeviceType().name()))
                                 .build()
                 );
                 break;
@@ -35,14 +35,22 @@ public class HubEventAvroMapper {
                         ScenarioAddedEventAvro.newBuilder()
                                 .setName(scenarioAddedEvent.getName())
                                 .setConditions(scenarioAddedEvent.getConditions().stream()
-                                        .map(scenarioCondition ->
-                                                ScenarioConditionAvro.newBuilder()
-                                                        .setType(ConditionTypeAvro.valueOf(scenarioCondition.getType().name()))
-                                                        .setOperation(ConditionOperationAvro.valueOf(scenarioCondition.getOperation().name()))
-                                                        .setSensorId(scenarioCondition.getSensorId())
-                                                        .setValue(scenarioCondition.getValue())
-                                                        .build()
+                                        .map(scenarioCondition -> {
+                                                    ScenarioConditionAvro.Builder scenarioConditionAvro = ScenarioConditionAvro.newBuilder();
 
+                                                    scenarioConditionAvro.setType(ConditionTypeAvro.valueOf(scenarioCondition.getType().name()))
+                                                            .setOperation(ConditionOperationAvro.valueOf(scenarioCondition.getOperation().name()))
+                                                            .setSensorId(scenarioCondition.getSensorId());
+                                                    Object value = scenarioCondition.getValue();
+                                                    if (value instanceof Integer) {
+                                                        scenarioConditionAvro.setValue((Integer) value);
+                                                    } else if (value instanceof Boolean) {
+                                                        scenarioConditionAvro.setValue((Boolean) value);
+                                                    } else {
+                                                        scenarioConditionAvro.setValue((Object) null);
+                                                    }
+                                                    return scenarioConditionAvro.build();
+                                                }
                                         ).toList()
                                 )
                                 .setActions(scenarioAddedEvent.getActions().stream()
@@ -50,7 +58,7 @@ public class HubEventAvroMapper {
                                                 DeviceActionAvro.newBuilder()
                                                         .setSensorId(deviceAction.getSensorId())
                                                         .setType(ActionTypeAvro.valueOf(deviceAction.getType().name()))
-                                                        .setValue(deviceAction.getValue())
+                                                        .setValue(deviceAction.getValue() != null ? deviceAction.getValue() : null)
                                                         .build()
                                         ).toList()
                                 ).build()

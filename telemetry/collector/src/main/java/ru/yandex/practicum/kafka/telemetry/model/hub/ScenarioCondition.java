@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Objects;
+
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,5 +24,5 @@ public class ScenarioCondition {
     @NotNull
     ConditionOperation operation;
 
-    Objects value;
+    Object value;
 }
