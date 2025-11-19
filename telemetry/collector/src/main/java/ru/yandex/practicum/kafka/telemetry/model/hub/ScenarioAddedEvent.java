@@ -1,6 +1,8 @@
 package ru.yandex.practicum.kafka.telemetry.model.hub;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,10 +19,12 @@ public class ScenarioAddedEvent extends HubEvent {
     @NotBlank
     String name;
 
-    @NotNull
+    @Valid
+    @NotEmpty
     List<ScenarioCondition> conditions;
 
-    @NotNull
+    @Valid
+    @NotEmpty
     List<DeviceAction> actions;
 
     @Override
