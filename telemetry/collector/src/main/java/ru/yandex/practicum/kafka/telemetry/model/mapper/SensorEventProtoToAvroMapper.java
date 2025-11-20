@@ -1,18 +1,20 @@
 package ru.yandex.practicum.kafka.telemetry.model.mapper;
 
+import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
-import ru.yandex.practicum.kafka.telemetry.model.sensor.*;
 
-public class SensorEventAvroMapper {
+import java.time.Instant;
 
-    public static SensorEventAvro toAvro(SensorEvent sensorEvent) {
+public class SensorEventProtoToAvroMapper {
+
+    public static SensorEventAvro toAvro(SensorEventProto sensorEvent) {
         SensorEventAvro.Builder builder = SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
-                .setTimestamp(sensorEvent.getTimestamp())
+                .setTimestamp(Instant.ofEpochSecond(sensorEvent.getTimestamp().getSeconds(), sensorEvent.getTimestamp().getNanos()))
                 .setHubId(sensorEvent.getHubId());
-        switch (sensorEvent.getType()) {
-            case LIGHT_SENSOR_EVENT -> {
-                LightSensorEvent lightSensorEvent = (LightSensorEvent) sensorEvent;
+        switch (sensorEvent.getPayloadCase()) {
+            case LIGHT_SENSOR -> {
+                LightSensorProto lightSensorEvent = sensorEvent.getLightSensor();
                 builder.setPayload(
                         LightSensorAvro.newBuilder()
                                 .setLinkQuality(lightSensorEvent.getLinkQuality())
@@ -21,28 +23,28 @@ public class SensorEventAvroMapper {
                 );
                 break;
             }
-            case MOTION_SENSOR_EVENT -> {
-                MotionSensorEvent motionSensorEvent = (MotionSensorEvent) sensorEvent;
+            case MOTION_SENSOR -> {
+                MotionSensorProto motionSensorEvent = sensorEvent.getMotionSensor();
                 builder.setPayload(
                         MotionSensorAvro.newBuilder()
                                 .setLinkQuality(motionSensorEvent.getLinkQuality())
-                                .setMotion(motionSensorEvent.isMotion())
+                                .setMotion(motionSensorEvent.getMotion())
                                 .setVoltage(motionSensorEvent.getVoltage())
                                 .build()
                 );
                 break;
             }
-            case SWITCH_SENSOR_EVENT -> {
-                SwitchSensorEvent switchSensorEvent = (SwitchSensorEvent) sensorEvent;
+            case SWITCH_SENSOR -> {
+                SwitchSensorProto switchSensorEvent = sensorEvent.getSwitchSensor();
                 builder.setPayload(
                         SwitchSensorAvro.newBuilder()
-                                .setState(switchSensorEvent.isState())
+                                .setState(switchSensorEvent.getState())
                                 .build()
                 );
                 break;
             }
-            case CLIMATE_SENSOR_EVENT -> {
-                ClimateSensorEvent climateSensorEvent = (ClimateSensorEvent) sensorEvent;
+            case CLIMATE_SENSOR -> {
+                ClimateSensorProto climateSensorEvent = sensorEvent.getClimateSensor();
                 builder.setPayload(
                         ClimateSensorAvro.newBuilder()
                                 .setCo2Level(climateSensorEvent.getCo2Level())
@@ -52,8 +54,8 @@ public class SensorEventAvroMapper {
                 );
                 break;
             }
-            case TEMPERATURE_SENSOR_EVENT -> {
-                TemperatureSensorEvent temperatureSensorEvent = (TemperatureSensorEvent) sensorEvent;
+            case TEMPERATURE_SENSOR -> {
+                TemperatureSensorProto temperatureSensorEvent = sensorEvent.getTemperatureSensor();
                 builder.setPayload(
                         TemperatureSensorAvro.newBuilder()
                                 .setTemperatureC(temperatureSensorEvent.getTemperatureC())
