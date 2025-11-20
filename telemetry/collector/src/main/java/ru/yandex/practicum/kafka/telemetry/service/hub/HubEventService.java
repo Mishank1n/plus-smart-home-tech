@@ -1,7 +1,7 @@
 package ru.yandex.practicum.kafka.telemetry.service.hub;
 
-import ru.yandex.practicum.kafka.telemetry.model.hub.HubEvent;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 
 public interface HubEventService {
-    void processEvent(HubEvent event);
+    void processEvent(HubEventProto event);
 }
