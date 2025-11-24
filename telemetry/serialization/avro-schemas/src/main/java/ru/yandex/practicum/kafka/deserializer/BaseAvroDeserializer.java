@@ -12,8 +12,13 @@ import java.util.Map;
 
 public class BaseAvroDeserializer<T extends SpecificRecordBase> implements Deserializer<T> {
 
-    private final DecoderFactory decoderFactory;
-    private final Schema schema;
+    private DecoderFactory decoderFactory;
+    private Schema schema;
+
+    public BaseAvroDeserializer() {
+        this.decoderFactory = DecoderFactory.get();
+
+    }
 
     public BaseAvroDeserializer(Schema schema) {
         this(DecoderFactory.get(), schema);
@@ -24,9 +29,16 @@ public class BaseAvroDeserializer<T extends SpecificRecordBase> implements Deser
         this.schema = schema;
     }
 
+    protected void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+    protected void setDecoderFactory(DecoderFactory decoderFactory) {
+        this.decoderFactory = decoderFactory;
+    }
+
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
-        // Ничего не делаем — конфигурация не требуется
     }
 
     @Override
@@ -34,8 +46,12 @@ public class BaseAvroDeserializer<T extends SpecificRecordBase> implements Deser
         if (data == null) {
             return null;
         }
+        // Проверяем, что schema инициализирована
+        if (this.schema == null) {
+            throw new IllegalStateException("Schema has not been set for this deserializer.");
+        }
         try {
-            DatumReader<T> reader = new SpecificDatumReader<>(schema);
+            DatumReader<T> reader = new SpecificDatumReader<>(this.schema);
             Decoder decoder = decoderFactory.binaryDecoder(data, null);
             return reader.read(null, decoder);
         } catch (Exception e) {
