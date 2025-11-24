@@ -1,10 +1,8 @@
 package ru.yandex.practicum.analyzer.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "scenario_actions", schema = "public")
@@ -12,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScenarioAction {
 
     @EmbeddedId
@@ -20,15 +19,15 @@ public class ScenarioAction {
     @ManyToOne
     @JoinColumn(name = "scenario_id")
     @MapsId("scenarioId")
-    private Scenario scenario;
+    Scenario scenario;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id")
     @MapsId("sensorId")
-    private Sensor sensor;
+    Sensor sensor;
 
     @ManyToOne
     @JoinColumn(name = "action_id")
     @MapsId("actionId")
-    private Action action;
+    Action action;
 }
