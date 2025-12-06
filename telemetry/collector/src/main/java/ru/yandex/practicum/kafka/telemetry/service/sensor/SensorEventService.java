@@ -1,8 +1,8 @@
 package ru.yandex.practicum.kafka.telemetry.service.sensor;
 
-import ru.yandex.practicum.kafka.telemetry.model.sensor.SensorEvent;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
 public interface SensorEventService {
 
-    void processEvent(SensorEvent event);
+    void processEvent(SensorEventProto event);
 }

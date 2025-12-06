@@ -2,14 +2,14 @@ package ru.yandex.practicum.kafka.telemetry.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.kafka.telemetry.model.hub.HubEvent;
-import ru.yandex.practicum.kafka.telemetry.model.mapper.HubEventAvroMapper;
-import ru.yandex.practicum.kafka.telemetry.model.mapper.SensorEventAvroMapper;
-import ru.yandex.practicum.kafka.telemetry.model.sensor.SensorEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.model.mapper.HubEventProtoToAvroMapper;
+import ru.yandex.practicum.kafka.telemetry.model.mapper.SensorEventProtoToAvroMapper;
 
 
 @Slf4j
@@ -22,9 +22,9 @@ public class KafkaProducerService {
     private static final String SENSORS_TOPIC = "telemetry.sensors.v1";
     private static final String HUBS_TOPIC = "telemetry.hubs.v1";
 
-    public void sendSensorEvent(SensorEvent sensorEvent) {
+    public void sendSensorEvent(SensorEventProto sensorEvent) {
         try {
-            SensorEventAvro avroEvent = SensorEventAvroMapper.toAvro(sensorEvent);
+            SensorEventAvro avroEvent = SensorEventProtoToAvroMapper.toAvro(sensorEvent);
 
             kafkaTemplate.send(SENSORS_TOPIC, sensorEvent.getId(), avroEvent);
             log.info("Sent sensor event to topic '{}': {}", SENSORS_TOPIC, sensorEvent);
@@ -35,9 +35,9 @@ public class KafkaProducerService {
         }
     }
 
-    public void sendHubEvent(HubEvent hubEvent) {
+    public void sendHubEvent(HubEventProto hubEvent) {
         try {
-            HubEventAvro avroEvent = HubEventAvroMapper.toAvro(hubEvent);
+            HubEventAvro avroEvent = HubEventProtoToAvroMapper.toAvro(hubEvent);
 
             kafkaTemplate.send(HUBS_TOPIC, hubEvent.getHubId(), avroEvent);
             log.info("Sent hub event to topic '{}': {}", HUBS_TOPIC, hubEvent);

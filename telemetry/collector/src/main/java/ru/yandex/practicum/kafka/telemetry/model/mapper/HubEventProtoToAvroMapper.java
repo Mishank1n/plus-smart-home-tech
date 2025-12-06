@@ -1,27 +1,29 @@
 package ru.yandex.practicum.kafka.telemetry.model.mapper;
 
+import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
-import ru.yandex.practicum.kafka.telemetry.model.hub.*;
 
-public class HubEventAvroMapper {
+import java.time.Instant;
 
-    public static HubEventAvro toAvro(HubEvent hubEvent) {
+public class HubEventProtoToAvroMapper {
+
+    public static HubEventAvro toAvro(HubEventProto hubEventProto) {
         HubEventAvro.Builder builder = HubEventAvro.newBuilder()
-                .setHubId(hubEvent.getHubId())
-                .setTimestamp(hubEvent.getTimestamp());
-        switch (hubEvent.getType()) {
+                .setHubId(hubEventProto.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(hubEventProto.getTimestamp().getSeconds(), hubEventProto.getTimestamp().getNanos()));
+        switch (hubEventProto.getPayloadCase()) {
             case DEVICE_ADDED -> {
-                DeviceAddedEvent deviceAddedEvent = (DeviceAddedEvent) hubEvent;
+                DeviceAddedEventProto deviceAddedEvent = hubEventProto.getDeviceAdded();
                 builder.setPayload(
                         DeviceAddedEventAvro.newBuilder()
                                 .setId(deviceAddedEvent.getId())
-                                .setType(DeviceTypeAvro.valueOf(deviceAddedEvent.getDeviceType().name()))
+                                .setType(DeviceTypeAvro.valueOf(deviceAddedEvent.getType().name()))
                                 .build()
                 );
                 break;
             }
             case DEVICE_REMOVED -> {
-                DeviceRemovedEvent deviceRemovedEvent = (DeviceRemovedEvent) hubEvent;
+                DeviceRemovedEventProto deviceRemovedEvent = hubEventProto.getDeviceRemoved();
                 builder.setPayload(
                         DeviceRemovedEventAvro.newBuilder()
                                 .setId(deviceRemovedEvent.getId())
@@ -30,43 +32,43 @@ public class HubEventAvroMapper {
                 break;
             }
             case SCENARIO_ADDED -> {
-                ScenarioAddedEvent scenarioAddedEvent = (ScenarioAddedEvent) hubEvent;
+                ScenarioAddedEventProto scenarioAddedEvent = hubEventProto.getScenarioAdded();
                 builder.setPayload(
                         ScenarioAddedEventAvro.newBuilder()
                                 .setName(scenarioAddedEvent.getName())
-                                .setConditions(scenarioAddedEvent.getConditions().stream()
+                                .setConditions(scenarioAddedEvent.getConditionList().stream()
                                         .map(scenarioCondition -> {
                                                     ScenarioConditionAvro.Builder scenarioConditionAvro = ScenarioConditionAvro.newBuilder();
 
                                                     scenarioConditionAvro.setType(ConditionTypeAvro.valueOf(scenarioCondition.getType().name()))
                                                             .setOperation(ConditionOperationAvro.valueOf(scenarioCondition.getOperation().name()))
                                                             .setSensorId(scenarioCondition.getSensorId());
-                                                    Object value = scenarioCondition.getValue();
-                                                    if (value instanceof Integer) {
-                                                        scenarioConditionAvro.setValue((Integer) value);
-                                                    } else if (value instanceof Boolean) {
-                                                        scenarioConditionAvro.setValue((Boolean) value);
-                                                    } else {
-                                                        scenarioConditionAvro.setValue((Object) null);
+                                                    switch (scenarioCondition.getValueCase()) {
+                                                        case BOOL_VALUE ->
+                                                                scenarioConditionAvro.setValue(scenarioCondition.getBoolValue());
+
+                                                        case INT_VALUE ->
+                                                                scenarioConditionAvro.setValue(scenarioCondition.getIntValue());
+                                                        default -> scenarioConditionAvro.setValue((Object) null);
                                                     }
                                                     return scenarioConditionAvro.build();
                                                 }
                                         ).toList()
                                 )
-                                .setActions(scenarioAddedEvent.getActions().stream()
+                                .setActions(scenarioAddedEvent.getActionList().stream()
                                         .map(deviceAction ->
                                                 DeviceActionAvro.newBuilder()
                                                         .setSensorId(deviceAction.getSensorId())
                                                         .setType(ActionTypeAvro.valueOf(deviceAction.getType().name()))
-                                                        .setValue(deviceAction.getValue() != null ? deviceAction.getValue() : null)
-                                                        .build()
+                                                        .setValue(deviceAction.getValue()).build()
+
                                         ).toList()
                                 ).build()
                 );
                 break;
             }
             case SCENARIO_REMOVED -> {
-                ScenarioRemovedEvent scenarioRemovedEvent = (ScenarioRemovedEvent) hubEvent;
+                ScenarioRemovedEventProto scenarioRemovedEvent = hubEventProto.getScenarioRemoved();
                 builder.setPayload(
                         ScenarioRemovedEventAvro.newBuilder()
                                 .setName(scenarioRemovedEvent.getName())
