@@ -1,0 +1,33 @@
+server:
+  port: 0
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        filter:
+          CommonRequestLoggingFilter: DEBUG
+
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: PostgreSQLDialect
+    show-sql: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/warehouse
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  properties:
+    hibernate:
+      format_sql: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
