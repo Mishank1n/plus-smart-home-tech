@@ -16,3 +16,8 @@ spring:
             - classpath:config/commerce/{application}
 server:
   port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
