@@ -1,6 +1,7 @@
 package ru.yandex.practicum.warehouse.dto;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +15,7 @@ import org.hibernate.validator.constraints.UUID;
 public class AddProductToWarehouseRequest {
 
     @UUID
-    @NotNull
+    @NotBlank
     String productId;
 
     @NotNull

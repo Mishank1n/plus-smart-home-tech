@@ -1,6 +1,7 @@
 package ru.yandex.practicum.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.store.dto.ProductCategory;
@@ -24,9 +25,11 @@ public class StoreProduct {
     String productId;
 
     @Column(name = "product_name", nullable = false)
+    @NotBlank
     String productName;
 
     @Column(name = "description", nullable = false)
+    @NotBlank
     String description;
 
     @Column(name = "image_src")
