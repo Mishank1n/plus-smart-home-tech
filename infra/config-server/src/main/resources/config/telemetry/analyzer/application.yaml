@@ -1,0 +1,40 @@
+analyzer:
+  kafka:
+    bootstrap-servers: localhost:9092
+    snapshots-group-id: analyzer-snapshots
+    hub-events-group-id: analyzer-hub-events
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      dialect: PostgreSQLDialect
+
+  properties:
+    hibernate:
+      format_sql: true
+
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analyze
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+
+
+grpc:
+  client:
+    hub-router:
+      address: static://localhost:59090
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

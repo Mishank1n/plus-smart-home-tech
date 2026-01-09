@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: collector
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      properties:
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+
+logging:
+  level:
+    ru:
+      yandex:
+        practicum:
+          collector:
+            DEBUG
+    org:
+      springframework:
+        kafka:
+          DEBUG
+      apache:
+        kafka:
+          DEBUG
+      zalando: TRACE
+
+gRPC:
+  server:
+    port: 59091
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

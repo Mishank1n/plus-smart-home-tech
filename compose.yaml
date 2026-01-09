@@ -1,11 +1,42 @@
 services:
-  db:
+  db-analyzer:
     image: postgres:16.1
     container_name: analyzer
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_DB=analyze
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  db-shopping-cart:
+    image: postgres:16.1
+    container_name: shopping_cart
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=cart
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  db-shopping-store:
+    image: postgres:16.1
+    container_name: shopping_store
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=store
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+
+  db-warehouse:
+    image: postgres:16.1
+    container_name: warehouse
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=warehouse
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
