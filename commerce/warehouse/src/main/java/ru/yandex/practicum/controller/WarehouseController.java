@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.cart.dto.ShoppingCartDto;
+import ru.yandex.practicum.order.dto.OrderBookingDto;
 import ru.yandex.practicum.service.WarehouseService;
-import ru.yandex.practicum.warehouse.dto.AddProductToWarehouseRequest;
-import ru.yandex.practicum.warehouse.dto.AddressDto;
-import ru.yandex.practicum.warehouse.dto.BookedProductsDto;
-import ru.yandex.practicum.warehouse.dto.NewProductInWarehouseRequest;
+import ru.yandex.practicum.warehouse.dto.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(WarehouseController.PATH)
@@ -45,6 +45,25 @@ public class WarehouseController {
     @PostMapping("/check")
     @ResponseStatus(HttpStatus.OK)
     public BookedProductsDto checkQuantity(@Valid @RequestBody ShoppingCartDto cartDto) {
-        return service.checkQuantity(cartDto);
+        return service.checkQuantityByCart(cartDto);
     }
+
+    @PostMapping("/shipped")
+    @ResponseStatus(HttpStatus.OK)
+    public void shippedToDelivery(@Valid @RequestBody ShippedToDeliveryRequest request) {
+        service.shippedToDelivery(request);
+    }
+
+    @PostMapping("/return")
+    @ResponseStatus(HttpStatus.OK)
+    public void getProductsFromReturn(@RequestBody Map<String, Integer> products) {
+        service.getProductsFromReturn(products);
+    }
+
+    @PostMapping("/assembly")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderBookingDto assemblyProductForOrderFromShoppingCart(@RequestBody @Valid AssemblyProductsForOrderRequest request) {
+        return service.assemblyProductForOrder(request);
+    }
+
 }

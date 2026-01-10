@@ -40,6 +40,35 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  db-payment:
+    image: postgres:16.1
+    container_name: payment
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=payment
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  db-order:
+    image: postgres:16.1
+    container_name: order
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=order
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  db-delivery:
+    image: postgres:16.1
+    container_name: delivery
+    ports:
+      - "5438:5432"
+    environment:
+      - POSTGRES_DB=delivery
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 
   kafka:
     image: confluentinc/confluent-local:7.4.3

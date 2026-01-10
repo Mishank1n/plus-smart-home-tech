@@ -9,7 +9,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import ru.yandex.practicum.kafka.deserializer.HubEventAvroDeserializer;
 import ru.yandex.practicum.kafka.deserializer.SensorsSnapshotAvroDeserializer;
-
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 

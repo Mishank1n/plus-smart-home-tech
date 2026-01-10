@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.cart.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.cart.exception.NotFoundCartException;
-import ru.yandex.practicum.exeption.ExceptionResponse;
 
 @RestControllerAdvice
 public class ErrorHandler {
