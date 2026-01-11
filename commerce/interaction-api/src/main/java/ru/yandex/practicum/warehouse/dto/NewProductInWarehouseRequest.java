@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.UUID;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

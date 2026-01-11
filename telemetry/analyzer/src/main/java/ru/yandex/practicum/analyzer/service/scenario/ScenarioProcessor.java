@@ -2,7 +2,6 @@ package ru.yandex.practicum.analyzer.service.scenario;
 
 import com.google.protobuf.util.Timestamps;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.analyzer.exception.NotFoundException;
 import ru.yandex.practicum.analyzer.model.Scenario;
@@ -12,7 +11,9 @@ import ru.yandex.practicum.analyzer.repository.ScenarioActionRepository;
 import ru.yandex.practicum.analyzer.repository.ScenarioConditionRepository;
 import ru.yandex.practicum.analyzer.repository.ScenarioRepository;
 import ru.yandex.practicum.analyzer.repository.SensorRepository;
-import ru.yandex.practicum.grpc.telemetry.event.*;
+import ru.yandex.practicum.grpc.telemetry.event.ActionTypeProto;
+import ru.yandex.practicum.grpc.telemetry.event.DeviceActionProto;
+import ru.yandex.practicum.grpc.telemetry.event.DeviceActionRequest;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ public class ScenarioProcessor {
         }
 
         sensorRepository.findByIdAndHubId(sensorId, hubId)
-                .orElseThrow(() -> new NotFoundException(String.format("Датчик %s не найден", sensorId )));
+                .orElseThrow(() -> new NotFoundException(String.format("Датчик %s не найден", sensorId)));
 
         ConditionOperationAvro operation = ConditionOperationAvro.valueOf(condition.getCondition().getOperation());
 

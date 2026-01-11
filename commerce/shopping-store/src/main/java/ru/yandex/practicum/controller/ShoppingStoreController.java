@@ -12,6 +12,7 @@ import ru.yandex.practicum.service.ShoppingStoreService;
 import ru.yandex.practicum.store.dto.ProductCategory;
 import ru.yandex.practicum.store.dto.ProductDto;
 import ru.yandex.practicum.store.dto.QuantityState;
+import ru.yandex.practicum.store.dto.SetProductQuantityStateRequest;
 
 
 @RestController
@@ -48,8 +49,8 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto changeProductQuantityStatus(@RequestParam("productId") String productId, @RequestParam("quantityState") QuantityState quantityState) {
-        return service.changeProductQuantityStatus(productId, quantityState);
+    public ProductDto changeProductQuantityStatus(@Valid @RequestParam SetProductQuantityStateRequest request) {
+        return service.changeProductQuantityStatus(request);
     }
 
     @GetMapping("/{productId}")

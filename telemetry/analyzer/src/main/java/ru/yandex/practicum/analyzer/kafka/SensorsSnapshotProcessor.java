@@ -4,12 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.errors.WakeupException;
-
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
-
 import ru.yandex.practicum.analyzer.grpc.AnalyzerClient;
-
 import ru.yandex.practicum.analyzer.service.scenario.ScenarioProcessor;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionRequest;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
@@ -32,7 +29,7 @@ public class SensorsSnapshotProcessor {
         try (Consumer<String, SensorsSnapshotAvro> sensorsSnapshotConsumer = shapshotConsumerFactory.createConsumer()) {
             sensorsSnapshotConsumer.subscribe(List.of("telemetry.snapshots.v1"));
 
-            while(true) {
+            while (true) {
                 var snapshotRecords = sensorsSnapshotConsumer.poll(Duration.ofSeconds(3));
                 if (snapshotRecords.count() > 0) {
                     log.info("Получено {} записей", snapshotRecords.count());

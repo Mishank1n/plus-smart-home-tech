@@ -14,9 +14,14 @@ spring:
           searchLocations:
             - classpath:config/telemetry/{application}
             - classpath:config/commerce/{application}
+            - classpath:config/infra/{application}
 server:
   port: 8888
 
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.netflix.discovery: DEBUG
 
 eureka:
   client:

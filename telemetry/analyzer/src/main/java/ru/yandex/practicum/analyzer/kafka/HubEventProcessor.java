@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.stereotype.Component;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.analyzer.service.hub.HubEventService;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
@@ -22,7 +22,7 @@ public class HubEventProcessor implements Runnable {
 
     @Override
     public void run() {
-        try(Consumer<String, HubEventAvro> hubEventConsumer = hubEventConsumerFactory.createConsumer()) {
+        try (Consumer<String, HubEventAvro> hubEventConsumer = hubEventConsumerFactory.createConsumer()) {
             hubEventConsumer.subscribe(List.of("telemetry.hubs.v1"));
 
             while (true) {

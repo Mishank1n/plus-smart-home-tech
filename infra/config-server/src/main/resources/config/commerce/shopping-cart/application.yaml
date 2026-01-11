@@ -5,6 +5,8 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.springframework.web.filter.CommonRequestLoggingFilter: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    com.netflix.discovery: DEBUG
 
 spring:
   jpa:

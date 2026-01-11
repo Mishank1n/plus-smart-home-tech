@@ -23,6 +23,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class ShoppingCartServiceImp implements ShoppingCartService {
 
+    private final String cartNotFoundErrorMessage = "Корзина пользователя %s не найдена";
+    private final String cartItemNotFoundErrorMessage = "В корзине пользователя %s нет товара с id = %s";
+
     @Autowired
     private final ShoppingCartRepository cartRepository;
 
@@ -34,7 +37,7 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
     @Override
     public ShoppingCartDto getCart(String userName) {
         return ShoppingCartMapper.toDto(cartRepository.findByOwner(userName).orElseThrow(() ->
-                new NotFoundCartException(String.format("Корзина пользователя %s не найдена", userName))
+                new NotFoundCartException(String.format(cartNotFoundErrorMessage, userName))
         ));
     }
 
@@ -62,11 +65,11 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
     @Override
     public ShoppingCartDto removeItems(String userName, List<String> productIds) {
         ShoppingCart shoppingCart = cartRepository.findByOwner(userName).orElseThrow(() ->
-                new NotFoundCartException(String.format("Корзина пользователя %s не найдена", userName)));
+                new NotFoundCartException(String.format(cartNotFoundErrorMessage, userName)));
         productIds.forEach(removeId -> {
             if (shoppingCart.getShoppingCartItems().stream().map(ShoppingCartItem::getProductId)
                     .noneMatch(productId -> productId.equals(removeId))) {
-                throw new NoProductsInShoppingCartException(String.format("В корзине пользователя %s нет предмета с id = %s", userName, removeId));
+                throw new NoProductsInShoppingCartException(String.format(cartItemNotFoundErrorMessage, userName, removeId));
             }
             shoppingCart.getShoppingCartItems().remove(shoppingCart.getShoppingCartItems().stream().filter(shoppingCartItem -> shoppingCartItem.getProductId().equals(removeId)).findFirst().get());
         });
@@ -76,9 +79,11 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
     @Override
     public ShoppingCartDto changeQuantityForItem(String userName, ChangeProductQuantityRequest request) {
         ShoppingCart shoppingCart = cartRepository.findByOwner(userName).orElseThrow(() ->
-                new NotFoundCartException(String.format("Корзина пользователя %s не найдена", userName)));
+                new NotFoundCartException(String.format(cartNotFoundErrorMessage, userName)));
         ShoppingCartItem cartItem = shoppingCart.getShoppingCartItems().stream()
-                .filter(shoppingCartItem -> shoppingCartItem.getProductId().equals(request.getProductId())).findFirst().orElseThrow(() -> new NoProductsInShoppingCartException(String.format("В козине пользователя %s нет товара с id = %s", userName, request.getProductId())));
+                .filter(shoppingCartItem -> shoppingCartItem.getProductId().equals(request.getProductId()))
+                .findFirst()
+                .orElseThrow(() -> new NoProductsInShoppingCartException(String.format(cartItemNotFoundErrorMessage, userName, request.getProductId())));
         if (request.getNewQuantity() == 0) {
             shoppingCart.getShoppingCartItems().remove(cartItem);
         } else {

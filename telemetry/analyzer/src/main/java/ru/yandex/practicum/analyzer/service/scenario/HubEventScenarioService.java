@@ -77,7 +77,7 @@ public class HubEventScenarioService {
             Action saveAction = actionRepository.save(newAction);
 
             Sensor sensor = sensorRepository.findByIdAndHubId(action.getSensorId(), event.getHubId())
-                    .orElseThrow(() -> new NotFoundException(String.format("Сенсор %s не найден",  action.getSensorId())));
+                    .orElseThrow(() -> new NotFoundException(String.format("Сенсор %s не найден", action.getSensorId())));
 
             ScenarioActionId actionId = ScenarioActionId.builder()
                     .scenarioId(savedScenario.getId())

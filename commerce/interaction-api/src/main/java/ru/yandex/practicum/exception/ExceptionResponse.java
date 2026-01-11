@@ -1,4 +1,4 @@
-package ru.yandex.practicum.exeption;
+package ru.yandex.practicum.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
