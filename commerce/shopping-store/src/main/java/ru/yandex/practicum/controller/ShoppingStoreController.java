@@ -49,7 +49,7 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto changeProductQuantityStatus(@Valid @RequestBody SetProductQuantityStateRequest request) {
+    public ProductDto changeProductQuantityStatus(@Valid @RequestParam SetProductQuantityStateRequest request) {
         return service.changeProductQuantityStatus(request);
     }
 
