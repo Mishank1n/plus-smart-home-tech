@@ -1,6 +1,8 @@
 package ru.yandex.practicum.order.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.UUID;
@@ -16,20 +18,21 @@ import java.util.Map;
 public class OrderDto {
 
     @UUID
+    @NotBlank
     String orderId;
 
     @UUID
+    @NotBlank
     String shoppingCartId;
 
     @NotEmpty
     Map<String, Integer> products;
 
-    @UUID
     String paymentId;
 
-    @UUID
     String deliveryId;
 
+    @NotNull
     OrderState state;
 
     Double deliveryWeight;
@@ -44,5 +47,6 @@ public class OrderDto {
 
     BigDecimal productPrice;
 
+    @NotBlank
     String username;
 }

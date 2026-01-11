@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import ru.yandex.practicum.store.dto.ProductCategory;
 import ru.yandex.practicum.store.dto.ProductDto;
 import ru.yandex.practicum.store.dto.QuantityState;
+import ru.yandex.practicum.store.dto.SetProductQuantityStateRequest;
 
 public interface ShoppingStoreService {
 
@@ -16,7 +17,7 @@ public interface ShoppingStoreService {
 
     ProductDto delete(String productId);
 
-    ProductDto changeProductQuantityStatus(String productId, QuantityState quantityState);
+    ProductDto changeProductQuantityStatus(SetProductQuantityStateRequest request);
 
     ProductDto get(String productId);
 }

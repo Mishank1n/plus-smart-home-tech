@@ -25,6 +25,8 @@ import java.util.Random;
 @AllArgsConstructor
 public class WarehouseServiceImp implements WarehouseService {
 
+    private final String warehouseProductNotFountError = "Нет информации о товаре с id = %s";
+
     @Autowired
     private final WarehouseProductRepository repository;
 
@@ -67,7 +69,7 @@ public class WarehouseServiceImp implements WarehouseService {
     @Override
     public void addQuantity(AddProductToWarehouseRequest addRequest) {
         WarehouseProduct warehouseProduct = repository.findById(addRequest.getProductId()).orElseThrow(() ->
-                new NoSpecifiedProductInWarehouseException(String.format("Нет информации о товаре с id = %s", addRequest.getProductId())));
+                new NoSpecifiedProductInWarehouseException(String.format(warehouseProductNotFountError, addRequest.getProductId())));
         warehouseProduct.setQuantity(warehouseProduct.getQuantity() + addRequest.getQuantity());
         repository.save(warehouseProduct);
     }
@@ -105,7 +107,7 @@ public class WarehouseServiceImp implements WarehouseService {
     public void getProductsFromReturn(Map<String, Integer> products) {
         for (Map.Entry<String, Integer> product : products.entrySet()) {
             WarehouseProduct warehouseProduct = repository.findById(product.getKey()).orElseThrow(() ->
-                    new NoSpecifiedProductInWarehouseException(String.format("Нет информации о товаре с id = %s", product.getKey())));
+                    new NoSpecifiedProductInWarehouseException(String.format(warehouseProductNotFountError, product.getKey())));
             warehouseProduct.setQuantity(warehouseProduct.getQuantity() + product.getValue());
             repository.save(warehouseProduct);
         }

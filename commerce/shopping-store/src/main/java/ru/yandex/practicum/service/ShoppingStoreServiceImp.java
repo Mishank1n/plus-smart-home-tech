@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.mapper.StoreProductMapper;
 import ru.yandex.practicum.model.StoreProduct;
 import ru.yandex.practicum.repository.StoreProductRepository;
-import ru.yandex.practicum.store.dto.ProductCategory;
-import ru.yandex.practicum.store.dto.ProductDto;
-import ru.yandex.practicum.store.dto.ProductState;
-import ru.yandex.practicum.store.dto.QuantityState;
+import ru.yandex.practicum.store.dto.*;
 import ru.yandex.practicum.store.exception.ProductNotFoundException;
 
 import java.util.Set;
@@ -20,6 +17,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Service
 public class ShoppingStoreServiceImp implements ShoppingStoreService {
+
+    private final String productNotFoundError  = "Не найден продукт с id = %s";
 
     @Autowired
     private final StoreProductRepository repository;
@@ -46,14 +45,14 @@ public class ShoppingStoreServiceImp implements ShoppingStoreService {
             throw new ValidationException("Id продукта не может быть пустым");
         }
         StoreProduct product = repository.findById(productDto.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException(String.format("Не найден продукт с id = %s", productDto.getProductId())));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(productNotFoundError, productDto.getProductId())));
         return StoreProductMapper.toDto(repository.save(StoreProductMapper.toStoreProduct(productDto)));
     }
 
     @Override
     public ProductDto delete(String productId) {
         StoreProduct product = repository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(String.format("Не найден продукт с id = %s", productId)));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(productNotFoundError, productId)));
         product.setProductState(ProductState.DEACTIVATE);
         repository.save(product);
         return StoreProductMapper.toDto(product);
@@ -61,10 +60,10 @@ public class ShoppingStoreServiceImp implements ShoppingStoreService {
     }
 
     @Override
-    public ProductDto changeProductQuantityStatus(String productId, QuantityState quantityState) {
-        StoreProduct product = repository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(String.format("Не найден продукт с id = %s", productId)));
-        product.setQuantityState(quantityState);
+    public ProductDto changeProductQuantityStatus(SetProductQuantityStateRequest request) {
+        StoreProduct product = repository.findById(request.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException(String.format(productNotFoundError, request.getProductId())));
+        product.setQuantityState(request.getQuantityState());
         repository.save(product);
         return StoreProductMapper.toDto(product);
     }
@@ -72,6 +71,6 @@ public class ShoppingStoreServiceImp implements ShoppingStoreService {
     @Override
     public ProductDto get(String productId) {
         return StoreProductMapper.toDto(repository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(String.format("Не найден продукт с id = %s", productId))));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(productNotFoundError, productId))));
     }
 }

@@ -22,6 +22,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class PaymentServiceImp implements PaymentService {
 
+    private final String paymentNotFoundErrorMessage = "Оплата для заказа с id = %s не найдена";
+
     @Autowired
     private final PaymentRepository repository;
 
@@ -52,7 +54,7 @@ public class PaymentServiceImp implements PaymentService {
     @Override
     public void successPayment(String orderId) {
         Payment payment = repository.findByOrderId(orderId).orElseThrow(() ->
-                new NoPaymentFoundException(String.format("Оплата для заказа с id = %s не найдена", orderId)));
+                new NoPaymentFoundException(String.format(paymentNotFoundErrorMessage, orderId)));
         payment.setPaymentState(PaymentState.SUCCESS);
         orderClient.paymentSuccess(orderId);
     }
@@ -60,7 +62,7 @@ public class PaymentServiceImp implements PaymentService {
     @Override
     public void failPayment(String orderId) {
         Payment payment = repository.findByOrderId(orderId).orElseThrow(() ->
-                new NoPaymentFoundException(String.format("Оплата для заказа с id = %s не найдена", orderId)));
+                new NoPaymentFoundException(String.format(paymentNotFoundErrorMessage, orderId)));
         payment.setPaymentState(PaymentState.FAILED);
         orderClient.paymentFailed(orderId);
     }

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Builder
 public class PaymentDto {
 
-    @UUID
+    @NotBlank
     String paymentId;
 
     @Min(value = 0)
@@ -24,7 +24,6 @@ public class PaymentDto {
 
     @Min(value = 0)
     BigDecimal deliveryTotal;
-    ;
 
     @Min(value = 0)
     BigDecimal feeTotal;

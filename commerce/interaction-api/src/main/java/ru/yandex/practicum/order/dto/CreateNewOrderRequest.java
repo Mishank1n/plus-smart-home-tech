@@ -12,7 +12,6 @@ import ru.yandex.practicum.warehouse.dto.AddressDto;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class CreateNewOrderRequest {
 
     @NotNull

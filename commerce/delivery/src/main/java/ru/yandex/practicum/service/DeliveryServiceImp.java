@@ -26,6 +26,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DeliveryServiceImp implements DeliveryService {
 
+    private final String deliveryNotFoundErrorMessage = "Доставка с id = %s не найдена";
+
     @Autowired
     private final DeliveryRepository repository;
 
@@ -57,9 +59,9 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public void successDelivery(String deliveryId) {
         Delivery delivery = repository.findById(deliveryId)
-                .orElseThrow(() -> new NoDeliveryFoundException(String.format("Доставка с id = %s не найдена", deliveryId)));
+                .orElseThrow(() -> new NoDeliveryFoundException(String.format(deliveryNotFoundErrorMessage, deliveryId)));
         delivery.setDeliveryState(DeliveryState.DELIVERED);
-        orderClient.delivery(delivery.getOrderId());
+        orderClient.deliverySuccess(delivery.getOrderId());
         repository.save(delivery);
 
     }
@@ -67,7 +69,7 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public void receivingProduct(String deliveryId) {
         Delivery delivery = repository.findById(deliveryId)
-                .orElseThrow(() -> new NoDeliveryFoundException(String.format("Доставка с id = %s не найдена", deliveryId)));
+                .orElseThrow(() -> new NoDeliveryFoundException(String.format(deliveryNotFoundErrorMessage, deliveryId)));
         delivery.setDeliveryState(DeliveryState.IN_PROGRESS);
         warehouseClient.shippedToDelivery(ShippedToDeliveryRequest.builder()
                 .orderId(delivery.getOrderId())
@@ -79,7 +81,7 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public void failDelivery(String deliveryId) {
         Delivery delivery = repository.findById(deliveryId)
-                .orElseThrow(() -> new NoDeliveryFoundException(String.format("Доставка с id = %s не найдена", deliveryId)));
+                .orElseThrow(() -> new NoDeliveryFoundException(String.format(deliveryNotFoundErrorMessage, deliveryId)));
         delivery.setDeliveryState(DeliveryState.FAILED);
         orderClient.deliveryFailed(delivery.getOrderId());
         repository.save(delivery);
@@ -91,7 +93,7 @@ public class DeliveryServiceImp implements DeliveryService {
             throw new NotEnoughInfoInOrderToCalculateException("Нельзя рассчитать стоимость без идентификатора доставки");
         }
         Delivery delivery = repository.findById(order.getDeliveryId())
-                .orElseThrow(() -> new NoDeliveryFoundException(String.format("Доставка с id = %s не найдена", order.getDeliveryId())));
+                .orElseThrow(() -> new NoDeliveryFoundException(String.format(deliveryNotFoundErrorMessage, order.getDeliveryId())));
         BigDecimal price = new BigDecimal(5);
         if (warehouseClient.getAddress().getCity().equals("ADDRESS_2")) {
             price = price.multiply(new BigDecimal(3));

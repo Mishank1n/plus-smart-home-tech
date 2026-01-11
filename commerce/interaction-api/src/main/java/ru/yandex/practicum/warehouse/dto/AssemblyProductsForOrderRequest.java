@@ -12,7 +12,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class AssemblyProductsForOrderRequest {
 
     @NotEmpty
